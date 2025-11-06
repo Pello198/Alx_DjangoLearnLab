@@ -3,10 +3,11 @@
 ```python
 from bookshelf.models import Book
 
-b = Book.objects.get(id=1)
-b.title = "Nineteen Eighty-Four"
-b.save()
-b
+book = Book.objects.get(id=1)   # retrieve the book first
+book.title = "Nineteen Eighty-Four"   # update the title
+book.save()
+
+print(book.title)
 
 # Expected Output:
-# <Book: Nineteen Eighty-Four by George Orwell>
+# Nineteen Eighty-Four
