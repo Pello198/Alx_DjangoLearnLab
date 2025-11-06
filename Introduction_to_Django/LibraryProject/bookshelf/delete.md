@@ -1,21 +1,12 @@
-
----
-
-### **delete.md**
-
-```md
 ### Delete Operation
 
 ```python
 from bookshelf.models import Book
 
-b = Book.objects.get(id=1)
-b.delete()
+book = Book.objects.get(id=1)
+book.delete()
+
+print("Book deleted successfully")
 
 # Expected Output:
-# (1, {'bookshelf.Book': 1})
-
-Book.objects.all()
-
-# Expected Output:
-# <QuerySet []>
+# Book deleted successfully
