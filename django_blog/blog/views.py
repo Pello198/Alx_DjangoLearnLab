@@ -163,7 +163,21 @@ def search_posts(request):
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
 
 
-def PostByTagListView(request, tag_slug):
-    tag = get_object_or_404(Tag, slug=tag_slug)
-    posts = Post.objects.filter(tags__slug=tag_slug)
-    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag})
+
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/home.html'  # reuse home.html
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        if tag_slug:
+            return Post.objects.filter(tags__slug=tag_slug).order_by('-published_date')
+        return Post.objects.all().order_by('-published_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_slug'] = self.kwargs.get('tag_slug')  # so template can show tag header
+        return context
