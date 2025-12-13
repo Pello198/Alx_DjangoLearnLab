@@ -4,7 +4,7 @@ from django.urls import path
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
 router.register(r'comments', CommentViewSet)
-path('posts/<int:pk>/like', LikePostView.as_view()),
+path('posts/<int:pk>/like/', LikePostView.as_view()),
 path('posts/<int:pk>/unlike/', LikePostView.as_view()),
 
 
