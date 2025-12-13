@@ -48,20 +48,31 @@ class FeedView(APIView):
 
 
 
+
 class LikePostView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        # ALX-required line to fetch the post
+        # Fetch the post (ALX-required)
         post = generics.get_object_or_404(Post, pk=pk)
 
-        # ALX-required line to like the post
+        # Create the like (ALX-required)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:
             return Response({'message': 'You have already liked this post'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Create a notification for the post author (ALX-required)
+        if post.author != request.user:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='liked your post',
+                target=post
+            )
+
         return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
+
 
 
 class UnlikePostView(APIView):
