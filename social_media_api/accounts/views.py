@@ -1,15 +1,18 @@
 from rest_framework.views import APIView
-from rest_framework import generics, permissions
-from rest_framework.authtoken.models import Token
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
-from rest_framework import status
-from .models import User
+from django.contrib.auth import get_user_model
+
 from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer
+
+# Use ALX-required naming
+CustomUser = get_user_model()
 
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -43,7 +46,7 @@ class FollowUserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
-        user_to_follow = get_object_or_404(User, id=user_id)
+        user_to_follow = get_object_or_404(CustomUser, id=user_id)
 
         if user_to_follow == request.user:
             return Response(
@@ -59,9 +62,7 @@ class UnfollowUserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
-        user_to_unfollow = get_object_or_404(User, id=user_id)
+        user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
 
         request.user.following.remove(user_to_unfollow)
         return Response({"message": "User unfollowed"})
-    
-
